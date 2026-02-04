@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MMDL-Agent Dashboard</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/dashboard.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div style="display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; padding: 0 20px; width: 100%;">
+            <div style="display: flex; align-items: center; gap: 20px; flex: 1;">
+                <h1 style="margin: 0; font-size: 1.5rem; color: #2563eb;">🔍 MMDL-Agent</h1>
+                <span style="font-size: 0.9rem; color: #888;">Industrial Anomaly Detection</span>
+            </div>
+            <div style="display: flex; gap: 20px;">
+                <a href="index.html" style="color: #2563eb; text-decoration: none; font-weight: 500;">Dashboard</a>
+                <a href="detection.html" style="color: #666; text-decoration: none;">Detection</a>
+                <a href="#" style="color: #666; text-decoration: none;">Status</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <header style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 40px 20px; text-align: center;">
+        <div style="max-width: 1200px; margin: 0 auto;">
+            <h1 style="margin: 0 0 10px 0; font-size: 2.5rem;">Anomaly Detection Dashboard</h1>
+            <p style="margin: 10px 0 0 0; font-size: 1.1rem; opacity: 0.95;">Real-time monitoring and detection</p>
+            <div style="margin-top: 20px; display: flex; justify-content: center; align-items: center; gap: 30;">
+                <div style="text-align: center;">
+                    <div style="font-size: 0.9rem; opacity: 0.85;">System Status</div>
+                    <div id="system-status" class="status-badge loading">🟡 Checking...</div>
+                </div>
+                <div style="text-align: center;">
+                    <div style="font-size: 0.9rem; opacity: 0.85;">Version</div>
+                    <div style="font-weight: 600;">1.0.0</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main style="max-width: 1200px; margin: 0 auto; padding: 40px 20px;">
+        <!-- Statistics Section -->
+        <section style="margin-bottom: 40px;">
+            <h2 style="margin-bottom: 20px; font-size: 1.5rem;">Quick Statistics</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Recent Tasks</div>
+                    <div class="stat-value" id="recent-tasks-count">0</div>
+                    <div class="stat-info">Last 10 detection tasks</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Anomalies Found</div>
+                    <div class="stat-value" id="anomalies-count">0</div>
+                    <div class="stat-info">Total detected anomalies</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Success Rate</div>
+                    <div class="stat-value" id="success-rate-count">0%</div>
+                    <div class="stat-info">Detection success rate</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quick Actions -->
+        <section style="margin-bottom: 40px;">
+            <h2 style="margin-bottom: 20px; font-size: 1.5rem;">Quick Actions</h2>
+            <div class="quick-actions">
+                <button class="btn btn-primary" onclick="window.location.href='detection.html'">
+                    ➕ Start New Detection
+                </button>
+                <button class="btn btn-secondary" onclick="document.getElementById('recent-list').scrollIntoView({behavior:'smooth'})">
+                    📋 View History
+                </button>
+                <button class="btn btn-outline" onclick="downloadReport()">
+                    📥 Download Report
+                </button>
+            </div>
+        </section>
+
+        <!-- Recent Detections -->
+        <section style="margin-bottom: 40px;">
+            <h2 style="margin-bottom: 20px; font-size: 1.5rem;">Recent Detections</h2>
+            <div id="recent-list" style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+                <p style="color: #888; text-align: center; padding: 20px;">
+                    No detections yet. <a href="detection.html" style="color: #2563eb; text-decoration: none;">Start a new detection task</a>
+                </p>
+            </div>
+        </section>
+
+        <!-- API Information -->
+        <section style="margin-bottom: 40px;">
+            <h2 style="margin-bottom: 20px; font-size: 1.5rem;">API Information</h2>
+            <div class="info-box">
+                <div style="margin-bottom: 15px;">
+                    <strong>Health Check:</strong><br>
+                    <code>GET /health</code>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <strong>Run Detection:</strong><br>
+                    <code>POST /v1/detect</code>
+                </div>
+                <div>
+                    <strong>Documentation:</strong><br>
+                    <a href="http://localhost:8000/docs" target="_blank" style="color: #2563eb; text-decoration: none;">
+                        Interactive API Docs (Swagger UI)
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2024 MMDL-Agent. All rights reserved.</p>
+    </footer>
+
+    <!-- API Client -->
+    <script src="assets/js/api-client.js"></script>
+    <!-- Dashboard Script -->
+    <script src="assets/js/dashboard.js"></script>
+</body>
+</html>
