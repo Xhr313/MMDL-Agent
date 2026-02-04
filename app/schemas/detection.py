@@ -1,4 +1,4 @@
-﻿# 检测任务与结果的 Pydantic 数据模型。
+﻿# TODO检测任务与结果的 Pydantic 数据模型，定义了检测任务的输入和输出格式（非常重要）
 from __future__ import annotations
 
 from typing import Any, Dict, List, Optional

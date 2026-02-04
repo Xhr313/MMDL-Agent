@@ -5,6 +5,7 @@ from app.memory.state import DetectionState
 from app.tools.anomaly_detection import MockAnomalyDetectionTool
 from app.exceptions.base import DataMissingError
 
+# 前置校验，检查任务是否存在
 async def load_data_node(state: DetectionState) -> DetectionState:
     # 模拟数据加载
     if not state.task:
@@ -13,6 +14,7 @@ async def load_data_node(state: DetectionState) -> DetectionState:
     state.logs.append("Data loaded")
     return state
 
+# 实例化调用工具Tool，执行工具逻辑，并返回结果
 async def anomaly_detect_node(state: DetectionState) -> DetectionState:
     tool = MockAnomalyDetectionTool()
     response = await tool.run(state.task)
@@ -23,6 +25,7 @@ async def anomaly_detect_node(state: DetectionState) -> DetectionState:
         state.errors.append(response.error or "Unknown tool error")
     return state
 
+# TODO 对结果进行润色，调用LLM，根据异常点的数据写一段通俗易懂的诊断建议
 async def summarize_node(state: DetectionState) -> DetectionState:
     # 模拟 LLM 总结
     if state.result:

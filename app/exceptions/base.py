@@ -1,14 +1,14 @@
 ﻿from __future__ import annotations
 
 """
-提供结构化的异常类型，帮助用户准确识别和处理错误。
+提供结构化的异常类型，帮助用户准确识别和处理错误
 """
 
 from typing import Any, Dict, Optional, Type
 
 
 class AppError(Exception):
-    """应用统一异常基类，包含稳定错误码、HTTP 状态码、以及附加上下文信息。"""
+    """应用统一异常基类，包含稳定错误码、HTTP 状态码、以及附加上下文信息"""
 
     code = "app_error"
     status_code = 500
@@ -24,21 +24,21 @@ class AppError(Exception):
         self.details: Dict[str, Any] = details or {}
         self.original_error = original_error
 
-    def __str__(self) -> str:  # pragma: no cover - simple formatting
+    def __str__(self) -> str:  # simple formatting
         if getattr(self, "original_error", None):
             return f"{self.message} (原因: {self.original_error})"
         return self.message
 
 
 class TimeoutError(AppError):
-    """下游调用或工作流步骤超时。"""
+    """下游调用或工作流步骤超时"""
 
     code = "timeout"
     status_code = 504
 
 
 class DataMissingError(AppError):
-    """必需输入数据缺失或无效。"""
+    """必需输入数据缺失或无效"""
 
     code = "data_missing"
     status_code = 422
@@ -52,7 +52,7 @@ class ExternalServiceError(AppError):
 
 
 class ModelError(AppError):
-    """模型调用相关错误，包含模型名与可选状态码。"""
+    """模型调用相关错误，包含模型名与可选状态码"""
 
     code = "model_error"
 
@@ -69,7 +69,7 @@ class ModelError(AppError):
 
 
 class ToolError(AppError):
-    """工具执行相关错误，包含工具名与调用参数。"""
+    """工具执行相关错误，捕捉Agent的执行行为是否符合预期"""
 
     code = "tool_error"
 
@@ -108,7 +108,7 @@ class ContextError(AppError):
 
 
 class TokenLimitError(ContextError):
-    """Token 限制错误"""
+    """Token 限制错误，对话太长，超过了模型的处理能力"""
 
     code = "token_limit"
 
@@ -119,7 +119,7 @@ class TokenLimitError(ContextError):
 
 
 class MaxTurnsError(AppError):
-    """达到最大执行轮次"""
+    """熔断，达到最大执行轮次或Agent陷入死循环"""
 
     code = "max_turns"
 

@@ -1,10 +1,11 @@
-﻿# 异常检测工具接口与 Mock 实现。
+﻿# TODO 异常检测工具接口与 Mock 实现，需把Mock删掉，补充真实工具接口
 from __future__ import annotations
 
 from typing import Optional
 from app.schemas.detection import DetectionTask, DetectionResult, ToolResponse
 from app.exceptions.base import ExternalServiceError
 
+# 抽象基类，所有的工具都必须有一个name和一个run方法
 class BaseTool:
     name: str = "base_tool"
 
