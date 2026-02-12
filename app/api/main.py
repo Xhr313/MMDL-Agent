@@ -47,11 +47,6 @@ async def root():
         "openapi_schema": "/openapi.json",
     }
 
-@app.get("/health")
-async def health():
-    """轻量健康检查接口。"""
-    return {"status": "ok"}
-
 @app.post("/v1/detect", response_model=DetectionResult)
 async def detect(task: DetectionTask):
     """运行 LangGraph 工作流并返回 DetectionResult。"""

@@ -61,20 +61,20 @@ MMDL-Agent/
 #### 1. 克隆项目
 
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/Xhr313/MMDL-Agent.git
 cd MMDL-Agent
 ```
 
-#### 2. 创建并激活 Python 虚拟环境（推荐 Conda）
+#### 2. 创建并激活 Python 虚拟环境
 
-如果使用 **Anaconda/Miniconda**：
+如果使用 **Anaconda**：
 
 ```bash
-conda create -n mmdl-agent python=3.11
-conda activate mmdl-agent
+conda create -n mmdl-agent python=3.11 #创建虚拟环境
+conda activate mmdl-agent #激活虚拟环境
 ```
 
-或使用 **venv**（Python 自带）：
+或使用 **venv**：
 
 ```bash
 python -m venv .venv
@@ -117,16 +117,9 @@ INFO:     Application startup complete
 ```bash
 # 根路由（欢迎页面）
 curl http://127.0.0.1:8000/
-
-# 健康检查
-curl http://127.0.0.1:8000/health
-
-# API 交互文档
-# 浏览器打开 http://127.0.0.1:8000/docs
 ```
 
 **返回示例：**
-
 ```json
 {
   "app": "industrial-anomaly-agent",
@@ -136,7 +129,6 @@ curl http://127.0.0.1:8000/health
   "openapi_schema": "/openapi.json"
 }
 ```
-
 ---
 
 ## 📋 核心模块说明
@@ -168,7 +160,7 @@ curl http://127.0.0.1:8000/health
 
 <a id="detection-algorithm"></a>
 
-### 异常检测算法（概览）
+### 异常检测算法 TODO（概览）
 
 - 客户端或 Web 前端向 `POST /v1/detect` 提交检测任务，请求体会被解析为 `DetectionTask`（见 `app/schemas/detection.py`）。
 - Agent 调用在 `app/tools/anomaly_detection.py` 中注册的检测工具（如 `MockAnomalyDetectionTool`，后续可扩展为 `HttpAnomalyDetectionTool` 对接真实服务）。
@@ -226,25 +218,13 @@ ruff check --fix
 mypy app/
 ```
 
-> 更完整的测试说明（覆盖率、并行运行、CI 集成等）请参考根目录下的 `TESTING.md`。
+> 更完整的测试说明（覆盖率、并行运行、CI 集成等）请参考docs下的 `TESTING.md`。
 
 ---
 
 ## 📖 API 示例
 
-### 1. 健康检查
-
-```bash
-GET http://127.0.0.1:8000/health
-```
-
-响应：
-
-```json
-{ "status": "ok" }
-```
-
-### 2. 异常检测
+### 1. 异常检测
 
 ```bash
 POST http://127.0.0.1:8000/v1/detect
@@ -275,6 +255,5 @@ Content-Type: application/json
 - `pyproject.toml`: 项目元信息、依赖声明、工具配置
 - `app/config/settings.py`: 应用全局配置（模型、超时、日志等）
 - `app/api/main.py`: FastAPI 实例创建、路由注册、中间件配置
-- `.env` (可选): 环境变量文件（如 API Key、模型选择等）
 
 ---
