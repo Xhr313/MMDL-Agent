@@ -8,8 +8,8 @@ version = "0.1.0"
 description = "Production-ready LangChain + LangGraph industrial anomaly detection agent"
 readme = "README.md"
 requires-python = ">=3.11"
-license = { text = "MIT" }
-authors = [{ name = "Your Team" }]
+license = "MIT"
+authors = [{ name = "MMDL" }]
 
 dependencies = [
   "fastapi>=0.115",
@@ -29,6 +29,10 @@ dev = [
   "ruff>=0.5",
   "mypy>=1.10",
 ]
+
+[tool.setuptools]
+package-dir = {"" = "."}
+packages = ["app", "web"]
 
 [tool.ruff]
 line-length = 100
