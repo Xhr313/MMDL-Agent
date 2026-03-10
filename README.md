@@ -124,7 +124,7 @@ curl http://127.0.0.1:8000/
 {
   "app": "industrial-anomaly-agent",
   "version": "0.1.0",
-  "message": "Welcome to MMDL-Agent",
+  "message": "后端服务器已经启动成功",
   "docs": "/docs",
   "openapi_schema": "/openapi.json"
 }

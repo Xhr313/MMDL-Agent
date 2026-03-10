@@ -1,28 +1,35 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 
 from fastapi import FastAPI, Request
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from app.config.settings import settings
-from app.schemas.detection import DetectionTask, DetectionResult
 from app.core.agent import build_graph
-from app.memory.state import DetectionState
 from app.exceptions.base import AppError
-from app.utils.logging import setup_logger, new_trace_id, TRACE_ID_HEADER
-from app.utils.logging import set_trace_id
+from app.memory.state import DetectionState
+from app.schemas.detection import DetectionResult, DetectionTask
+from app.utils.logging import TRACE_ID_HEADER, new_trace_id, set_trace_id, setup_logger
 
 app = FastAPI(title=settings.app_name)
 
-# 基础日志器；trace_id 会在中间件中注入 
+# CORS: allow local frontend to call backend APIs.
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 logger = setup_logger(level=settings.log_level)
 
 @app.middleware("http")
 async def add_trace_id(request: Request, call_next):
     """为请求/响应附加 trace_id，并绑定到日志上下文。"""
-    trace_id = request.headers.get(TRACE_ID_HEADER) or new_trace_id()  
-    request.state.trace_id = trace_id    #将trace_id保存到request.state中，方便后续异常处理读取
+    trace_id = request.headers.get(TRACE_ID_HEADER) or new_trace_id()
+    request.state.trace_id = trace_id
     set_trace_id(trace_id)
-    response = await call_next(request)  #程序在这里暂停，把控制权交给下游（可能是下一个中间件，或者是业务代码）
-    response.headers[TRACE_ID_HEADER] = trace_id    #下游处理完拿到了 response。在这里给成品盖个章（加上 Header）
+    response = await call_next(request)
+    response.headers[TRACE_ID_HEADER] = trace_id
     return response
 
 @app.exception_handler(AppError)
@@ -35,14 +42,18 @@ async def app_error_handler(request: Request, exc: AppError):
         content={"code": exc.code, "message": exc.message, "trace_id": request.state.trace_id},
     )
 
-#TODO 以下均需要根据实际调用情况修改接口
+@app.get("/health")
+async def health():
+    """Health check endpoint."""
+    return {"status": "ok"}
+
 @app.get("/")
 async def root():
     """根路由：返回应用信息与文档链接。"""
     return {
         "app": settings.app_name,
         "version": "0.1.0",
-        "message": "Welcome to MMDL-Agent",
+        "message": "后端服务器已经启动成功",
         "docs": "/docs",
         "openapi_schema": "/openapi.json",
     }
@@ -53,6 +64,13 @@ async def detect(task: DetectionTask):
     graph = build_graph()
     state = DetectionState(task=task)
     result_state = await graph.ainvoke(state)
-    if result_state.result:
-        return result_state.result
+
+    if isinstance(result_state, dict):
+        result = result_state.get("result")
+    else:
+        result = getattr(result_state, "result", None)
+
+    if result:
+        return result
+
     return DetectionResult(task_id=task.task_id, status="failed", anomalies=[])

@@ -1,2 +1,19 @@
 # 排除 docs 目录所有内容
 /docs/*
+
+# 环境变量与本地配置
+.env
+.env.*
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+
+# 虚拟环境
+.venv/
+venv/
+
+# IDE
+.idea/

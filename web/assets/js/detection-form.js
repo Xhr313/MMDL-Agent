@@ -196,15 +196,18 @@ function getFormData() {
     const dataInput = document.getElementById('data-input').value.trim();
     const threshold = document.getElementById('threshold-slider').value;
 
+    const parsedData = parseDataInput(dataInput);
+
     return {
         task_id: taskId,
         asset_id: assetId,
         start_time: formatDateTime(startTime),
         end_time: formatDateTime(endTime),
         data_source: dataSource,
-        data: parseDataInput(dataInput),
         parameters: {
             threshold: parseFloat(threshold),
+            data: parsedData,
+            //tool_type: "http"
         },
     };
 }
