@@ -1,3 +1,5 @@
+Docs/
+
 # Python
 __pycache__/
 *.py[cod]
@@ -48,11 +50,6 @@ htmlcov/
 # OS
 Thumbs.db
 .DS_Store
-
-# Project Specific
-# (If you want to keep Docs/ but ignore some temporary files inside)
-# !Docs/
-
 
 # 环境变量与本地配置
 .env
