@@ -1,4 +1,4 @@
-﻿# 文件说明：pytest 全局配置与通用 fixtures。
+# 文件说明：pytest 全局配置与通用 fixtures。
 """
 pytest 配置与全局 fixtures
 """
@@ -28,3 +28,32 @@ def mock_settings():
     """模拟应用设置"""
     from app.config.settings import settings
     return settings
+
+
+@pytest.fixture(autouse=True)
+def mock_llm(monkeypatch):
+    """测试环境 Mock LLM，避免访问真实网络/消耗额度。"""
+    from types import SimpleNamespace
+
+    from app.config.settings import settings
+    import app.core.graph as graph_module
+
+    class DummyChatOpenAI:
+        def __init__(self, *args, **kwargs):
+            pass
+
+        async def ainvoke(self, messages):
+            return SimpleNamespace(content="(test) summary")
+
+    old_api_key = settings.openai_api_key
+    old_base_url = settings.llm_base_url
+
+    settings.openai_api_key = "test-key"
+    settings.llm_base_url = "http://test.local/v1"
+
+    monkeypatch.setattr(graph_module, "ChatOpenAI", DummyChatOpenAI)
+
+    yield
+
+    settings.openai_api_key = old_api_key
+    settings.llm_base_url = old_base_url

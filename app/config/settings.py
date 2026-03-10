@@ -1,17 +1,35 @@
-﻿# 配置管理，基于 pydantic-settings 读取环境变量
+# 配置管理，基于 pydantic-settings 读取环境变量
 from __future__ import annotations
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-# 自动去寻找配置，优先级为：环境变量 > .env 文件 > 代码默认值
-# 后期如果要对接新的第三方算法 URL，只需要在Settings类里加一行，更新 .env 即可
+
 class Settings(BaseSettings):
+    """应用配置类。
+
+    说明：
+    - 所有字段都可以通过环境变量 APP_* 覆盖，例如 APP_APP_NAME、APP_ANOMALY_DETECTION_URL 等。
+    """
+
     model_config = SettingsConfigDict(env_file=".env", env_prefix="APP_")
 
     # 应用基础配置
     app_name: str = "industrial-anomaly-agent"
     log_level: str = "INFO"
     enable_tracing: bool = False
+
+    # 异常检测服务配置（供 HttpAnomalyDetectionTool 使用）
+    anomaly_detection_url: str = "http://localhost:8080/"  #Todo后期要修改的核心地方 
+    anomaly_detection_timeout: float = 30.0
+
+    # LLM 配置（供 summarize_node 使用）
+    openai_api_key: str = "sk-c68a4a60a183496aad06b257b07eeed2"
+    llm_model: str = "qwen3.5-plus"
+    llm_temperature: float = 0.3
+    llm_timeout: float = 60.0
+    llm_max_tokens: int = 500
+    llm_base_url: str = "https://dashscope.aliyuncs.com/compatible-mode/v1"
+
 
 settings = Settings()
 
